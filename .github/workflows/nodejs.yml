@@ -1,0 +1,28 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm ci, lint, test and build
+      run: |
+        npm ci
+        npm run lint
+        npm test -- praparat --no-watch --no-progress --browsers=ChromeHeadlessCI
+        npm run build -- praparat
+        npm run build -- demo-app --prod
+      env:
+        CI: true
