@@ -1,8 +1,27 @@
 {
   "name": "praparat",
   "version": "0.0.1",
+  "keywords": [
+    "pan",
+    "zoom",
+    "angular"
+  ],
+  "author": {
+    "name": "itigoore01",
+    "email": "xyz.shotao@gmail.com",
+    "url": "https://github.com/itigoore01"
+  },
+  "homepage": "https://github.com/itigoore01/praparat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itigoore01/praparat/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itigoore01/praparat.git"
+  },
   "peerDependencies": {
-    "@angular/common": "^8.2.8",
-    "@angular/core": "^8.2.8"
+    "@angular/common": ">=6.0.0",
+    "@angular/core": "^>=6.0.0"
   }
 }
