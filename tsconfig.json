@@ -18,7 +18,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "praparat": [
+        "dist/praparat"
+      ],
+      "praparat/*": [
+        "dist/praparat/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

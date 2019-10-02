@@ -45,7 +45,7 @@
       true,
       "ignore-params"
     ],
-    "no-non-null-assertion": true,
+    "no-non-null-assertion": false,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-use-before-declare": true,
@@ -61,6 +61,14 @@
       "single"
     ],
     "trailing-comma": false,
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore"
+      ]
+    },
+
     "component-class-suffix": true,
     "contextual-lifecycle": true,
     "directive-class-suffix": true,

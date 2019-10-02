@@ -1,0 +1,9 @@
+.praparat-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.praparat-zoom-element {
+  transform-origin: 0 0;
+  will-change: transform;
+}
