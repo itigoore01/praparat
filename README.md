@@ -1,3 +1,8 @@
+![Build Status](https://github.com/itigoore01/praparat/workflows/CI/badge.svg)
+[![npm version](https://badge.fury.io/js/praparat.svg)](https://badge.fury.io/js/praparat)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 # Praparat
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.5.
