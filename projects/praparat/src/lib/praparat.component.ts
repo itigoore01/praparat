@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { PanZoomModel } from './pan-zoom-model';
 import { Subject, combineLatest, animationFrameScheduler } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { takeUntil, debounceTime, throttleTime, tap } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { Point } from './point';
 
@@ -125,14 +125,26 @@ export class PraparatComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       );
 
-      combineLatest([
+      const panZoomObservable$ = combineLatest([
         this.model.scaleObservable,
         this.model.panObservable,
-      ]).pipe(
-        debounceTime(0, animationFrameScheduler),
+      ]);
+
+      panZoomObservable$.pipe(
+        throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }),
         takeUntil(this.destroyed),
       ).subscribe(([scale, pan]) => {
-        this.renderer.setStyle(this.zoomElement.nativeElement, 'transform', `scale(${scale}) translate(${pan.x}px, ${pan.y}px) `);
+        this.renderer.setStyle(this.zoomElement.nativeElement, 'transform', `scale(${scale}) translate3d(${pan.x}px, ${pan.y}px, 0px)`);
+      });
+
+      panZoomObservable$.pipe(
+        debounceTime(100, animationFrameScheduler),
+        takeUntil(this.destroyed),
+      ).subscribe(() => {
+        this.renderer.setStyle(this.zoomElement.nativeElement, 'will-change', 'auto');
+        setTimeout(() => {
+          this.renderer.removeStyle(this.zoomElement.nativeElement, 'will-change');
+        }, 0);
       });
     });
   }
