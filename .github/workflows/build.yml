@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on: [push]
 
@@ -24,5 +24,7 @@ jobs:
         npm test -- praparat --no-watch --no-progress --browsers=ChromeHeadlessCI
         npm run build -- praparat
         npm run build -- demo-app --prod
+        cp ./README.md ./dist/praparat
+        cp ./LICENSE ./dist/praparat
       env:
         CI: true
