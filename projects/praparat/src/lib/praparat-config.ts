@@ -27,4 +27,11 @@ export function createPrapratConfig(config: Partial<PraparatConfig> = {}): Prapa
   };
 }
 
-export const DEFAULT_PRAPARAT_CONFIG = new InjectionToken<PraparatConfig>('DEFAULT_PRAPARAT_CONFIG');
+export function DEFAULT_PRAPARAT_CONFIG_FACTORY() {
+  return createPrapratConfig();
+}
+
+export const DEFAULT_PRAPARAT_CONFIG = new InjectionToken<PraparatConfig>('DEFAULT_PRAPARAT_CONFIG', {
+  providedIn: 'root',
+  factory: DEFAULT_PRAPARAT_CONFIG_FACTORY,
+});
