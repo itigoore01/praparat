@@ -11,7 +11,7 @@ import {
   Input,
 } from '@angular/core';
 import { PanZoomModel } from './pan-zoom-model';
-import { Subject, combineLatest, animationFrameScheduler, BehaviorSubject } from 'rxjs';
+import { Subject, combineLatest, animationFrameScheduler, BehaviorSubject, Subscription } from 'rxjs';
 import { takeUntil, debounceTime, throttleTime, distinctUntilChanged } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { Point } from './point';
@@ -72,6 +72,22 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
     this.model.minScale = value;
   }
 
+  @Input()
+  get friction() {
+    return this.model.friction;
+  }
+  set friction(value) {
+    this.model.friction = value;
+  }
+
+  @Input()
+  get stopMomentumScrollThreshold() {
+    return this.model.stopMomentumScrollThreshold;
+  }
+  set stopMomentumScrollThreshold(value) {
+    this.model.stopMomentumScrollThreshold = value;
+  }
+
   private model = new PanZoomModel({
     ...this.defaultConfig,
   });
@@ -79,6 +95,8 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
   private animating = new BehaviorSubject(false);
   private destroyed = new Subject<void>();
   private removeListeners: (() => void)[] = [];
+
+  private animationSubscription: Subscription | null = null;
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
@@ -91,6 +109,8 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.destroyed.next();
     this.destroyed.complete();
+
+    this.cancelAnimation();
 
     for (const removeListener of this.removeListeners) {
       removeListener();
@@ -106,6 +126,7 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
         this.renderer.listen(this.elementRef.nativeElement, 'wheel', (event: WheelEvent) => {
           event.preventDefault();
           event.stopPropagation();
+          this.cancelAnimation();
 
           const {
             deltaY,
@@ -130,6 +151,7 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
         this.renderer.listen(this.elementRef.nativeElement, 'touchstart', (event: TouchEvent) => {
           event.preventDefault();
           event.stopPropagation();
+          this.cancelAnimation();
 
           const touches: Point[] = this.touchListToPoints(event.touches);
 
@@ -144,6 +166,15 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
 
             removeTouchMoveListener();
             removeTouchEndListener();
+
+            const updateMomentamPan = this.model.createUpdateMomentam();
+            const animationSubscription = animationFrameScheduler.schedule(function() {
+              if (updateMomentamPan()) {
+                animationSubscription.unsubscribe();
+              }
+              this.schedule();
+            });
+            this.animationSubscription = animationSubscription;
           });
         })
       );
@@ -152,6 +183,7 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
         this.renderer.listen(this.elementRef.nativeElement, 'mousedown', (downEvent: MouseEvent) => {
           downEvent.preventDefault();
           downEvent.stopPropagation();
+          this.cancelAnimation();
 
           this.model.touchStart([{
             x: downEvent.clientX,
@@ -170,6 +202,15 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
 
             removeMouseMoveListener();
             removeMouseUpListener();
+
+            const updateMomentamPan = this.model.createUpdateMomentam();
+            const animationSubscription = animationFrameScheduler.schedule(function() {
+              if (updateMomentamPan()) {
+                animationSubscription.unsubscribe();
+              }
+              this.schedule();
+            });
+            this.animationSubscription = animationSubscription;
           });
         })
       );
@@ -242,6 +283,13 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
       x: (viewportWidth - targetWidth * newScale) / newScale / 2 - targetLeft,
       y: (viewportHeight - targetHeight * newScale) / newScale / 2 - targetTop,
     });
+  }
+
+  private cancelAnimation() {
+    if (this.animationSubscription) {
+      this.animationSubscription.unsubscribe();
+      this.animationSubscription = null;
+    }
   }
 
   private touchListToPoints(touchList: TouchList): Point[] {

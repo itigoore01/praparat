@@ -1,4 +1,4 @@
-import { Point } from './pan-zoom-model';
+import { Point } from './point';
 
 interface VelocitySample {
   timestamp: number;
@@ -22,15 +22,17 @@ export class VelocityTracker {
     this.samples = [];
   }
 
-  updatePoint(point: Point) {
+  addTrackingPoint(point: Point) {
     this.samples.push({
-      timestamp: Date.now(),
+      timestamp: performance.now(),
       point,
     });
     this.prune();
   }
 
   getVelocity(): Velocity {
+    this.prune();
+
     if (this.samples.length < 2) {
       return {
         velocity: 0,
@@ -42,10 +44,10 @@ export class VelocityTracker {
     const first = this.samples[0];
     const last = this.samples[this.samples.length - 1];
 
-    const time = (last.timestamp - first.timestamp) / 1000;
+    const time = (last.timestamp - first.timestamp);
 
-    const distanceX = (last.point.x - first.point.y);
-    const distanceY = ((last.point.y - first.point.y));
+    const distanceX = (last.point.x - first.point.x);
+    const distanceY = (last.point.y - first.point.y);
 
     return {
       velocityX: distanceX / time,
@@ -55,11 +57,8 @@ export class VelocityTracker {
   }
 
   private prune() {
-    if (this.samples.length === 0) {
-      return;
-    }
-
-    while (this.samples[0].timestamp < (Date.now() - this.units)) {
+    const time = performance.now();
+    while (this.samples.length > 0 && time - this.samples[0].timestamp > this.units) {
       this.samples.shift();
     }
   }
