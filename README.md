@@ -1,4 +1,4 @@
-![](https://github.com/itigoore01/praparat/workflows/build/badge.svg)
+![](https://github.com/itigoore01/praparat/workflows/Build/badge.svg)
 [![npm version](https://badge.fury.io/js/praparat.svg)](https://badge.fury.io/js/praparat)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
