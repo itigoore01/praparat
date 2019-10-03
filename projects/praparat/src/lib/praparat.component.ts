@@ -11,8 +11,8 @@ import {
   Input,
 } from '@angular/core';
 import { PanZoomModel } from './pan-zoom-model';
-import { Subject, combineLatest, animationFrameScheduler } from 'rxjs';
-import { takeUntil, debounceTime, throttleTime } from 'rxjs/operators';
+import { Subject, combineLatest, animationFrameScheduler, BehaviorSubject } from 'rxjs';
+import { takeUntil, debounceTime, throttleTime, distinctUntilChanged } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { Point } from './point';
 import { DEFAULT_PRAPARAT_CONFIG, PraparatConfig } from './praparat-config';
@@ -76,6 +76,7 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
     ...this.defaultConfig,
   });
 
+  private animating = new BehaviorSubject(false);
   private destroyed = new Subject<void>();
   private removeListeners: (() => void)[] = [];
 
@@ -177,7 +178,30 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
         throttleTime(0, animationFrameScheduler, { leading: true, trailing: true }),
         takeUntil(this.destroyed),
       ).subscribe(([scale, pan]) => {
+        if (!this.animating.value) {
+          this.animating.next(true);
+        }
         this.renderer.setStyle(this.zoomElement.nativeElement, 'transform', `scale(${scale}) translate3d(${pan.x}px, ${pan.y}px, 0px)`);
+      });
+
+      panZoomObservable$.pipe(
+        debounceTime(300),
+        takeUntil(this.destroyed),
+      ).subscribe(() => {
+        if (this.animating.value) {
+          this.animating.next(false);
+        }
+      });
+
+      this.animating.pipe(
+        distinctUntilChanged(),
+        takeUntil(this.destroyed),
+      ).subscribe(animating => {
+        if (animating) {
+          this.renderer.setStyle(this.zoomElement.nativeElement, 'will-change', 'transform');
+        } else {
+          this.renderer.setStyle(this.zoomElement.nativeElement, 'will-change', 'auto');
+        }
       });
     });
   }
