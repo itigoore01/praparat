@@ -8,6 +8,8 @@ export interface PraparatConfig {
   maxScale: number;
   minScale: number;
   willChangeDebounceTime: number;
+  friction: number;
+  stopMomentumScrollThreshold: number;
 }
 
 export function createPrapratConfig(config: Partial<PraparatConfig> = {}): PraparatConfig {
@@ -18,6 +20,8 @@ export function createPrapratConfig(config: Partial<PraparatConfig> = {}): Prapa
     maxScale = 100,
     minScale = 0.01,
     willChangeDebounceTime = 300,
+    friction = 0.995,
+    stopMomentumScrollThreshold = 0.1,
   } = config;
 
   return {
@@ -27,6 +31,8 @@ export function createPrapratConfig(config: Partial<PraparatConfig> = {}): Prapa
     maxScale,
     minScale,
     willChangeDebounceTime,
+    friction,
+    stopMomentumScrollThreshold,
   };
 }
 

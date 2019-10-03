@@ -1,5 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { Point } from './point';
+import { VelocityTracker } from './velocity-tracker';
 
 export interface ZoomOptions {
   initialScale: number;
@@ -7,19 +8,27 @@ export interface ZoomOptions {
   wheelZoomFactor: number;
   maxScale: number;
   minScale: number;
+  friction: number;
+  stopMomentumScrollThreshold: number;
 }
 
 export class PanZoomModel {
 
-  initialScale = this.options.initialScale || 1;
+  initialScale = this.options.initialScale;
 
-  initialPan = this.options.initialPan || { x: 0, y: 0 };
+  initialPan = this.options.initialPan;
 
-  wheelZoomFactor = this.options.wheelZoomFactor || 0.01;
+  wheelZoomFactor = this.options.wheelZoomFactor;
 
-  maxScale = this.options.maxScale || 10;
+  maxScale = this.options.maxScale;
 
-  minScale = this.options.minScale || 0.25;
+  minScale = this.options.minScale;
+
+  friction = this.options.friction;
+
+  stopMomentumScrollThreshold = this.options.stopMomentumScrollThreshold;
+
+  private velocityTracker = new VelocityTracker(100);
 
   private _snapshot: {
     pan: Point;
@@ -42,7 +51,7 @@ export class PanZoomModel {
   readonly scaleObservable = this._scale$.asObservable();
   readonly panObservable = this._pan$.asObservable();
 
-  constructor(private options: Partial<ZoomOptions> = {}) {
+  constructor(private options: ZoomOptions) {
   }
 
   pan(point: Point) {
@@ -54,6 +63,9 @@ export class PanZoomModel {
     const distance = touches.length > 1 ? this.getDistance(touches[0], touches[1]) : 0;
 
     const referencePoint = this.getMiddlePoint(touches);
+
+    this.velocityTracker.reset();
+    this.velocityTracker.addTrackingPoint(referencePoint);
 
     this._snapshot = {
       pan: this.panPoint,
@@ -71,6 +83,8 @@ export class PanZoomModel {
 
     const { pan, referencePoint, scale, distance } = this._snapshot;
     const point = this.getMiddlePoint(touches);
+
+    this.velocityTracker.addTrackingPoint(point);
 
     if (touches.length > 1) {
       const scaleMultiplier = this.getDistance(touches[0], touches[1]) / distance;
@@ -92,6 +106,38 @@ export class PanZoomModel {
 
   touchEnd() {
     this._snapshot = null;
+  }
+
+  createUpdateMomentam() {
+    let lastTick = performance.now();
+    let { velocityX, velocityY } = this.velocityTracker.getVelocity();
+    let done = false;
+
+    return () => {
+      let delta = performance.now() - lastTick;
+      lastTick = performance.now();
+
+      let { x, y } = this.panPoint;
+
+      for (; delta > 0 && !done; delta--) {
+        if (Math.abs(velocityX) <= this.stopMomentumScrollThreshold && Math.abs(velocityY) <= this.stopMomentumScrollThreshold) {
+          done = true;
+        }
+
+        velocityX *= this.friction;
+        velocityY *= this.friction;
+
+        x += velocityX;
+        y += velocityY;
+      }
+
+      this.pan({
+        x,
+        y,
+      });
+
+      return done;
+    };
   }
 
   zoom(scale: number, { focal }: { focal?: Point } = {}) {
@@ -136,6 +182,8 @@ export class PanZoomModel {
       maxScale: this.maxScale,
       minScale: this.minScale,
       wheelZoomFactor: this.wheelZoomFactor,
+      friction: this.friction,
+      stopMomentumScrollThreshold: this.stopMomentumScrollThreshold,
     });
   }
 
