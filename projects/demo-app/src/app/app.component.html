@@ -1,13 +1,8 @@
-<praparat>
+<praparat #praparat>
   <div class="container">
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
+    <div *ngFor="let d of range"
+         class="circle"
+         #circle
+         (click)="praparat.zoomToFit(circle)"></div>
   </div>
 </praparat>
