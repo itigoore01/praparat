@@ -1,3 +1,10 @@
+# [1.0.0-alpha.4](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.3@alpha...v1.0.0-alpha.4@alpha) (2019-10-03)
+
+
+### Performance Improvements
+
+* **praparat:** switching will-change ([1883178](https://github.com/itigoore01/praparat/commit/1883178))
+
 # [1.0.0-alpha.3](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.2@alpha...v1.0.0-alpha.3@alpha) (2019-10-03)
 
 
