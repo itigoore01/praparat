@@ -28,7 +28,7 @@ jobs:
         cp ./LICENSE ./dist/praparat
       env:
         CI: true
-    - name: publish
+    - name: publish to npm
       run: |
         npx semantic-release
       env:
