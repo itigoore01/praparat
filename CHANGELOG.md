@@ -1,3 +1,10 @@
+# [1.0.0-alpha.7](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.6@alpha...v1.0.0-alpha.7@alpha) (2019-10-03)
+
+
+### Features
+
+* **praparat:** add ability to momentum scroll ([55539ad](https://github.com/itigoore01/praparat/commit/55539ad)), closes [#7](https://github.com/itigoore01/praparat/issues/7)
+
 # [1.0.0-alpha.6](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.5@alpha...v1.0.0-alpha.6@alpha) (2019-10-03)
 
 
