@@ -190,7 +190,7 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
       });
 
       panZoomObservable$.pipe(
-        debounceTime(300),
+        debounceTime(this.defaultConfig.willChangeDebounceTime),
         takeUntil(this.destroyed),
       ).subscribe(() => {
         if (this.animating.value) {

@@ -7,6 +7,7 @@ export interface PraparatConfig {
   wheelZoomFactor: number;
   maxScale: number;
   minScale: number;
+  willChangeDebounceTime: number;
 }
 
 export function createPrapratConfig(config: Partial<PraparatConfig> = {}): PraparatConfig {
@@ -15,7 +16,8 @@ export function createPrapratConfig(config: Partial<PraparatConfig> = {}): Prapa
     initialPan = { x: 0, y: 0 },
     wheelZoomFactor = 0.01,
     maxScale = 100,
-    minScale = 0.01
+    minScale = 0.01,
+    willChangeDebounceTime = 300,
   } = config;
 
   return {
@@ -24,6 +26,7 @@ export function createPrapratConfig(config: Partial<PraparatConfig> = {}): Prapa
     wheelZoomFactor,
     maxScale,
     minScale,
+    willChangeDebounceTime,
   };
 }
 
