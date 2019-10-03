@@ -129,6 +129,16 @@ export class PanZoomModel {
     this.zoomToPoint(newScale, focal);
   }
 
+  clone() {
+    return new PanZoomModel({
+      initialScale: this.initialScale,
+      initialPan: this.initialPan,
+      maxScale: this.maxScale,
+      minScale: this.minScale,
+      wheelZoomFactor: this.wheelZoomFactor,
+    });
+  }
+
   private setScale(scale: number) {
     if (this.scale !== scale) {
       this._scale$.next(scale);

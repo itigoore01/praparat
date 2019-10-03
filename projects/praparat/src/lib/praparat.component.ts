@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   ViewChild,
   ElementRef,
@@ -8,13 +7,15 @@ import {
   NgZone,
   AfterViewInit,
   OnDestroy,
-  Inject
+  Inject,
+  Input,
 } from '@angular/core';
 import { PanZoomModel } from './pan-zoom-model';
 import { Subject, combineLatest, animationFrameScheduler } from 'rxjs';
-import { takeUntil, debounceTime, throttleTime, tap } from 'rxjs/operators';
+import { takeUntil, debounceTime, throttleTime } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { Point } from './point';
+import { DEFAULT_PRAPARAT_CONFIG, PraparatConfig } from './praparat-config';
 
 /**
  * @dynamic
@@ -25,12 +26,54 @@ import { Point } from './point';
   styleUrls: ['./praparat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PraparatComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PraparatComponent implements OnDestroy, AfterViewInit {
 
   @ViewChild('zoomElement', { static: true })
   zoomElement!: ElementRef<HTMLElement>;
 
-  private model = new PanZoomModel();
+  @Input()
+  get initialScale() {
+    return this.model.initialScale;
+  }
+  set initialScale(value) {
+    this.model.initialScale = value;
+  }
+
+  @Input()
+  get initialPan() {
+    return this.model.initialPan;
+  }
+  set initialPan(value) {
+    this.model.initialPan = value;
+  }
+
+  @Input()
+  get wheelZoomFactor() {
+    return this.model.wheelZoomFactor;
+  }
+  set wheelZoomFactor(value) {
+    this.model.wheelZoomFactor = value;
+  }
+
+  @Input()
+  get maxScale() {
+    return this.model.maxScale;
+  }
+  set maxScale(value) {
+    this.model.maxScale = value;
+  }
+
+  @Input()
+  get minScale() {
+    return this.model.minScale;
+  }
+  set minScale(value) {
+    this.model.minScale = value;
+  }
+
+  private model = new PanZoomModel({
+    ...this.defaultConfig,
+  });
 
   private destroyed = new Subject<void>();
   private removeListeners: (() => void)[] = [];
@@ -40,10 +83,8 @@ export class PraparatComponent implements OnInit, OnDestroy, AfterViewInit {
     private renderer: Renderer2,
     private ngZone: NgZone,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(DEFAULT_PRAPARAT_CONFIG) private defaultConfig: PraparatConfig,
   ) { }
-
-  ngOnInit() {
-  }
 
   ngOnDestroy() {
     this.destroyed.next();
@@ -55,6 +96,7 @@ export class PraparatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.model = this.model.clone();
 
     this.ngZone.runOutsideAngular(() => {
       // マウスホイールでのズーム
