@@ -1,3 +1,10 @@
+# [1.0.0-alpha.5](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.4@alpha...v1.0.0-alpha.5@alpha) (2019-10-03)
+
+
+### Bug Fixes
+
+* **praparat:** fix zoom focal bug ([60a8eba](https://github.com/itigoore01/praparat/commit/60a8eba))
+
 # [1.0.0-alpha.4](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.3@alpha...v1.0.0-alpha.4@alpha) (2019-10-03)
 
 
