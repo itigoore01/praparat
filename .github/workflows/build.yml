@@ -28,3 +28,10 @@ jobs:
         cp ./LICENSE ./dist/praparat
       env:
         CI: true
+    - name: publish
+      run: |
+        npx semantic-release
+    - uses: actions/upload-artifact@v1
+      with:
+        name: praparat-artifact
+        path: dist/praparat
