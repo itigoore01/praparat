@@ -179,16 +179,6 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
       ).subscribe(([scale, pan]) => {
         this.renderer.setStyle(this.zoomElement.nativeElement, 'transform', `scale(${scale}) translate3d(${pan.x}px, ${pan.y}px, 0px)`);
       });
-
-      panZoomObservable$.pipe(
-        debounceTime(100, animationFrameScheduler),
-        takeUntil(this.destroyed),
-      ).subscribe(() => {
-        this.renderer.setStyle(this.zoomElement.nativeElement, 'will-change', 'auto');
-        setTimeout(() => {
-          this.renderer.removeStyle(this.zoomElement.nativeElement, 'will-change');
-        }, 0);
-      });
     });
   }
 
