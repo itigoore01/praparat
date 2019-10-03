@@ -1,3 +1,10 @@
+# [1.0.0-alpha.2](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.1@alpha...v1.0.0-alpha.2@alpha) (2019-10-03)
+
+
+### Features
+
+* **praparat): feat(praparat:** add ability to zoom to fit ([5451a37](https://github.com/itigoore01/praparat/commit/5451a37)), closes [#6](https://github.com/itigoore01/praparat/issues/6)
+
 # 1.0.0-alpha.1 (2019-10-03)
 
 
