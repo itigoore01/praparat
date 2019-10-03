@@ -1,3 +1,10 @@
+# [1.0.0-alpha.6](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.5@alpha...v1.0.0-alpha.6@alpha) (2019-10-03)
+
+
+### Features
+
+* **praparat:** will-change debounce time can be set from config ([177df89](https://github.com/itigoore01/praparat/commit/177df89))
+
 # [1.0.0-alpha.5](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.4@alpha...v1.0.0-alpha.5@alpha) (2019-10-03)
 
 
