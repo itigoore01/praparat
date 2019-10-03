@@ -113,9 +113,14 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
             clientY,
           } = event;
 
+          const {
+            top,
+            left,
+          } = this.elementRef.nativeElement.getBoundingClientRect();
+
           this.model.wheelZoom(deltaY, {
-            x: clientX,
-            y: clientY,
+            x: clientX - left,
+            y: clientY - top,
           });
         })
       );
@@ -208,6 +213,8 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
 
   zoomToFit(element: HTMLElement) {
     const {
+      top: viewportTop,
+      left: viewportLeft,
       width: viewportWidth,
       height: viewportHeight,
     } = this.elementRef.nativeElement.getBoundingClientRect();
@@ -222,8 +229,8 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
     const currentScale = this.model.scale;
     const currentPan = this.model.panPoint;
 
-    targetTop = targetTop / currentScale - currentPan.y;
-    targetLeft = targetLeft / currentScale - currentPan.x;
+    targetTop = (targetTop - viewportTop) / currentScale - currentPan.y;
+    targetLeft = (targetLeft - viewportLeft) / currentScale - currentPan.x;
     targetWidth = targetWidth / currentScale;
     targetHeight = targetHeight / currentScale;
 
