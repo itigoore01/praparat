@@ -22,6 +22,7 @@ import { DEFAULT_PRAPARAT_CONFIG, PraparatConfig } from './praparat-config';
  */
 @Component({
   selector: 'praparat',
+  exportAs: 'praparat',
   templateUrl: './praparat.component.html',
   styleUrls: ['./praparat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -188,6 +189,37 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
           this.renderer.removeStyle(this.zoomElement.nativeElement, 'will-change');
         }, 0);
       });
+    });
+  }
+
+  zoomToFit(element: HTMLElement) {
+    const {
+      width: viewportWidth,
+      height: viewportHeight,
+    } = this.elementRef.nativeElement.getBoundingClientRect();
+
+    let {
+      top: targetTop,
+      left: targetLeft,
+      width: targetWidth,
+      height: targetHeight,
+    } = element.getBoundingClientRect();
+
+    const currentScale = this.model.scale;
+    const currentPan = this.model.panPoint;
+
+    targetTop = targetTop / currentScale - currentPan.y;
+    targetLeft = targetLeft / currentScale - currentPan.x;
+    targetWidth = targetWidth / currentScale;
+    targetHeight = targetHeight / currentScale;
+
+    this.model.zoom(Math.min(viewportWidth / targetWidth, viewportHeight / targetHeight));
+
+    const newScale = this.model.scale;
+
+    this.model.pan({
+      x: (viewportWidth - targetWidth * newScale) / newScale / 2 - targetLeft,
+      y: (viewportHeight - targetHeight * newScale) / newScale / 2 - targetTop,
     });
   }
 
