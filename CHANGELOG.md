@@ -1,3 +1,10 @@
+# [1.0.0-alpha.8](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.7@alpha...v1.0.0-alpha.8@alpha) (2019-10-08)
+
+
+### Bug Fixes
+
+* **praparat:** click event does not work ([7641549](https://github.com/itigoore01/praparat/commit/7641549))
+
 # [1.0.0-alpha.7](https://github.com/itigoore01/praparat/compare/v1.0.0-alpha.6@alpha...v1.0.0-alpha.7@alpha) (2019-10-03)
 
 
