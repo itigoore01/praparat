@@ -125,7 +125,6 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
       this.removeListeners.push(
         this.renderer.listen(this.elementRef.nativeElement, 'wheel', (event: WheelEvent) => {
           event.preventDefault();
-          event.stopPropagation();
           this.cancelAnimation();
 
           const {
@@ -149,8 +148,6 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
       // タッチでのパン&ズーム
       this.removeListeners.push(
         this.renderer.listen(this.elementRef.nativeElement, 'touchstart', (event: TouchEvent) => {
-          event.preventDefault();
-          event.stopPropagation();
           this.cancelAnimation();
 
           const touches: Point[] = this.touchListToPoints(event.touches);
@@ -181,8 +178,6 @@ export class PraparatComponent implements OnDestroy, AfterViewInit {
 
       this.removeListeners.push(
         this.renderer.listen(this.elementRef.nativeElement, 'mousedown', (downEvent: MouseEvent) => {
-          downEvent.preventDefault();
-          downEvent.stopPropagation();
           this.cancelAnimation();
 
           this.model.touchStart([{
